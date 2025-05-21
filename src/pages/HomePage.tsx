@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Activity, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MapPin, Activity, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ExplorationMode } from '../types';
 
@@ -21,9 +21,21 @@ const slides = [
   }
 ];
 
+const categories = [
+  { value: 'all', label: 'All Categories' },
+  { value: 'health', label: 'Health' },
+  { value: 'education', label: 'Education' },
+  { value: 'entertainment', label: 'Entertainment' },
+  { value: 'sports', label: 'Sports' },
+  { value: 'culture', label: 'Culture' },
+  { value: 'business', label: 'Business' }
+];
+
 const HomePage: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mode, setMode] = useState<ExplorationMode>('place');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -42,8 +54,8 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="flex flex-col">
-      {/* Image Slider */}
-      <div className="relative h-[500px] overflow-hidden">
+      {/* Image Slider - Reduced height */}
+      <div className="relative h-[400px] overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -127,6 +139,35 @@ const HomePage: React.FC = () => {
           </ul>
         </div>
       </nav>
+
+      {/* Search Section */}
+      <div className="bg-white py-4 border-b border-slate-200">
+        <div className="container mx-auto px-4">
+          <div className="flex gap-4 items-center">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {categories.map((category) => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
+                </option>
+              ))}
+            </select>
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
+              <input
+                type="text"
+                placeholder={`Search in ${selectedCategory === 'all' ? 'all categories' : selectedCategory}...`}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Mode Selection */}
       <div className="container mx-auto px-4 py-6 flex justify-center space-x-4">
